@@ -1,0 +1,69 @@
+<nav class="navbar is-d">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="{{ path('app_home') }}">
+            <p class="subtitle is-4 has-text-primary">
+                <i class="fab fa-battle-net"></i> <b>FoodoMarket</b>
+            </p>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="{{ path('app_home') }}">
+                Accueil
+            </a>
+            <a class="navbar-item" href="#">
+                Nouveautés
+            </a>
+            <a class="navbar-item" href="#">
+                Catalogue de Produits
+            </a>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a class="navbar-item" href="#">
+                    Fournisseur
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="navbar-item">
+            <form action="#" class="is-flex" style="width: 100%;">
+                <div class="field has-addons" style="flex-grow: 1;">
+                    <div class="control is-primary text-bold is-expanded search-text">
+                        <input name="query" type="text" class="input is-small" placeholder="Rechercher un produit ..." required>
+                    </div>
+                    <div class="control">
+                        <button type="submit" class="button is-primary is-small">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="navbar-end">
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-light is-small" href="{{ path('app_logout') }}">
+                            Déconnexion
+                        </a>
+                    </div>
+                </div>
+                <div class="navbar-item has-text-primary">
+                    Bienvenue  {{ app.user.firstName }}
+                </div>
+            {% else %}
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-primary is-small" href="{{ path('app_register') }}">
+                            <strong>S'inscrire</strong>
+                        </a>
+                        <a class="button is-light is-small" href="{{ path('app_login') }}">
+                            Se Connecter
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,17 @@
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
+
+
+@import "~bulma";
+
+body {
+    background-color: whitesmoke;
+}
+
+//Navbar
+
+.search-text{
+  width: 400px;
+}
+.fa-search {
+  padding-top: 5px;
+}

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <h1 class="title has-text-black">Inscription</h1>
+                {{ form_start(form) }}
+                <div class="field has-text-black">
+                    {{ form_row(form.firstName, {'attr': {'class': 'input', 'placeholder': 'Votre prénom'}}) }}
+                </div>
+                <div class="field has-text-black">
+                    {{ form_row(form.lastName, {'attr': {'class': 'input', 'placeholder': 'Votre nom de famille'}}) }}
+                </div>
+                <div class="field has-text-black">
+                    {{ form_row(form.email, {'attr': {'class': 'input', 'placeholder': 'Votre adresse e-mail'}}) }}
+                </div>
+                <div class="field has-text-black">
+                    {{ form_row(form.phone, {'attr': {'class': 'input', 'placeholder': 'Votre numéro de téléphone'}}) }}
+                </div>
+                <div class="field has-text-black">
+                    {{ form_row(form.password.first, {'attr': {'class': 'input', 'placeholder': 'Votre mot de passe'}}) }}
+                </div>
+                <div class="field has-text-black">
+                    {{ form_row(form.password.second, {'attr': {'class': 'input', 'placeholder': 'Confirmer votre mot de passe'}}) }}
+                </div>
+                <div class="field has-text-black">
+                    {{ form_row(form._token) }}
+                </div>
+                <div class="field has-text-black">
+                    <button class="button is-primary" type="submit">Enregistrer</button>
+                </div>
+                <div class="mt-4"></div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
