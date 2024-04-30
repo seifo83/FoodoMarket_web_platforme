@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page Fournisseur{% endblock %}
+
+{% block body %}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="notification {% if type == 'success' %}is-success{% elseif type == 'error' %}is-danger{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+
+                <div class="column is-4">
+                    <a href="{{ path('supplier_new') }}" class="button is-primary">Ajouter un nouveau fournisseur</a>
+                </div>
+
+                <div class="column is-7">
+                        <form class="field is-grouped is-centered" action="{{ path('app_suppliers_filter') }}" method="GET">
+                            <p class="control is-expanded">
+                                <input class="input" name="filter" type="text" placeholder="Rechercher un fournisseur">
+                            </p>
+                            <p class="control">
+                                <button class="button is-primary">Rechercher</button>
+                            </p>
+                        </form>
+                </div>
+
+                {% for supplier in suppliers %}
+                    <div class="column is-4 mt-4">
+                        <div class="card">
+                            <div class="card-content">
+                                <p class="title"> {{ supplier.name }}</p>
+                                <p class="title">{{ supplier.getProductType() }}</p>
+                                <p>{{ supplier.phone }}</p>
+                                <p> {{ supplier.address}} </p>
+                                <p>{{ supplier.country }}</p>
+                                <p>{{ supplier.city }}</p>
+                                <p>{{ supplier.getNotes() }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor%}
+            </div>
+        </div>
+    </section>
+{% endblock %}

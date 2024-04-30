@@ -4,7 +4,7 @@
 @import "~bulma";
 
 body {
-    background-color: whitesmoke;
+    background-color: deeppink;
 }
 
 //Navbar
@@ -14,4 +14,19 @@ body {
 }
 .fa-search {
   padding-top: 5px;
+}
+
+.notification {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+}
+
+.notification.is-success {
+  background-color: #72e8c4;
+  color: #4d4b4b;
+}
+
+.notification.is-hidden {
+  display: none;
 }

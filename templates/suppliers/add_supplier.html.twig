@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulaire d'ajout de fournisseur{% endblock %}
+
+{% block body %}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="notification {% if type == 'success' %}is-primary{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title has-text-black">Formulaire d'ajout de fournisseur</h1>
+
+            <div class="columns is-centered">
+                <div class="column is-half">
+                    {{ form_start(form) }}
+                    <div class="field">
+                        <label  class="label has-text-black">Nom</label>
+                        <div class="control">
+                            {{ form_widget(form.name, {'attr': {'class': 'input', 'placeholder': 'Entrez le nom du fournisseur'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label  class="label has-text-black">Adresse</label>
+                        <div class="control">
+                            {{ form_widget(form.address, {'attr': {'class': 'input', 'placeholder': 'Entrez l\'adresse'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label  class="label has-text-black">Ville</label>
+                        <div class="control">
+                            {{ form_widget(form.city, {'attr': {'class': 'input', 'placeholder': 'Entrez la ville'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label  class="label has-text-black">Pays</label>
+                        <div class="control">
+                            {{ form_widget(form.country, {'attr': {'class': 'input', 'placeholder': 'Entrez le pays'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label  class="label has-text-black">Téléphone</label>
+                        <div class="control">
+                            {{ form_widget(form.phone, {'attr': {'class': 'input', 'placeholder': 'Entrez le numéro de téléphone'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label  class="label has-text-black">Email</label>
+                        <div class="control">
+                            {{ form_widget(form.email, {'attr': {'class': 'input', 'placeholder': 'Entrez l\'adresse email'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label  class="label has-text-black">Type de produit</label>
+                        <div class="control">
+                            {{ form_widget(form.product_type, {'attr': {'class': 'input', 'placeholder': 'Entrez le type de produit'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label  class="label has-text-black">Notes</label>
+                        <div class="control">
+                            {{ form_widget(form.notes, {'attr': {'class': 'input', 'placeholder': 'Entrez les notes'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-primary" type="submit">Ajouter</button>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
