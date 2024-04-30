@@ -25,16 +25,28 @@ npm run build
 docker-compose up -d
 symfony serve -d
 ```
+### Cache-clear
 
-### Lancer les tests
+```bash
+make:cc='symfony console c:c'
+
+```
+### Yarn
+
+```bash
+make:yarn='yarn encore dev'
+
+```
+### Tests
 
 ```bash
  php bin/phpunit  --testdox
- APP_ENV=test symfony php bin/phpunit --coverage-html var/log/test/test-coverage
-
+make:filter='symfony php bin/phpunit --filter'
+make:testphpunit='symfony php bin/phpunit --filter'
+make:couverage='symfony php bin/phpunit --coverage-html var/log/test/test-coverage'
 ```
 
-### Lancer  php_codesniffer phpcs
+### PHP Codesniffer => phpcs
 
 ```bash
 source ~/.bashrc
@@ -42,7 +54,7 @@ source ~/.bashrc
  make:fix='~/.composer/vendor/bin/phpcbf --standard=PSR12'
 ```
 
-### Lancer  php_stan phpStan
+### PHP Stan => phpStan
 
 ```bash
 source ~/.bashrc
