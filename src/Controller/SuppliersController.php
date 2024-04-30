@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Suppliers;
 use App\Form\SuppliersType;
+use App\Repository\SuppliersRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,16 +14,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class SuppliersController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
+    private SuppliersRepository $repository;
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        SuppliersRepository $repository
+    ) {
         $this->entityManager = $entityManager;
+        $this->repository = $repository;
     }
 
     #[Route('/suppliers', name: 'app_suppliers')]
     public function infoSuppliers(): Response
     {
-        $suppliers = $this->entityManager->getRepository(Suppliers::class)->findAll();
+        $suppliers = $this->repository->findAll();
 
         return $this->render('suppliers/info.html.twig', [
             'suppliers' => $suppliers,
@@ -37,12 +42,13 @@ class SuppliersController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $this->entityManager->persist($supplier);
             $this->entityManager->flush();
 
-            $this->addFlash('success',
-                'Le fournisseur a été ajouté avec succès.');
+            $this->addFlash(
+                'success',
+                'Le fournisseur a été ajouté avec succès.'
+            );
 
             return $this->redirectToRoute('app_suppliers');
         }
@@ -57,9 +63,7 @@ class SuppliersController extends AbstractController
     {
         $filter = $request->query->get('filter');
 
-        $filteredSuppliers = $this->entityManager
-            ->getRepository(Suppliers::class)
-            ->findByFilteredSuppliers($filter);
+        $filteredSuppliers = $this->repository->findByFilteredSuppliers($filter);
 
         return $this->render('suppliers/info.html.twig', [
             'suppliers' => $filteredSuppliers,

@@ -22,13 +22,14 @@ class SuppliersRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string $filter
      * @return Suppliers[] Returns an array of Suppliers objects
      */
-    public function findByFilteredSuppliers($filter): array
+    public function findByFilteredSuppliers(string $filter): array
     {
         return $this->createQueryBuilder('s')
             ->where('s.name LIKE :filter')
-            ->setParameter('filter', '%'.$filter.'%')
+            ->setParameter('filter', '%' . $filter . '%')
             ->getQuery()
             ->getResult();
     }
