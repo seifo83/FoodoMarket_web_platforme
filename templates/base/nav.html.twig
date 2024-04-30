@@ -19,7 +19,7 @@
                 Catalogue de Produits
             </a>
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <a class="navbar-item" href="#">
+                <a class="navbar-item" href="{{ path('app_suppliers') }}">
                     Fournisseur
                 </a>
             {% endif %}

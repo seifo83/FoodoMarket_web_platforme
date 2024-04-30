@@ -28,7 +28,7 @@ class SecurityControllerFunctionalTest extends WebTestCase
         $userRepository = $entityManager->getRepository(User::class);
 
         /** @var User|null $user */
-        $user = $userRepository->findOneBy(['email' => 'test@example.com']);
+        $user = $userRepository->findOneBy(['email' => 'imcclure@gmail.com']);
 
         if (null === $user) {
             throw new \RuntimeException('Aucun utilisateur trouvé avec cet e-mail.');
