@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Tests\Functional\register;
+namespace App\Tests\Functional\Register;
 
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -29,9 +31,12 @@ class RegistrationControllerFunctionalTest extends WebTestCase
 
         $client->submit($form);
 
-        $response = $client->getResponse();
-        $redirectUrl = $client->getResponse()->headers->get('Location');
-
         self::assertResponseRedirects('/login');
+
+        $entityManager = static::$container->get(EntityManagerInterface::class);
+        $userRepository = $entityManager->getRepository(User::class);
+        $userData = $userRepository->findOneBy(['email' => $form['registration_form[email]']->getValue()]);
+
+        self::assertNotNull($userData);
     }
 }

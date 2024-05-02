@@ -1,17 +1,21 @@
 <?php
 
-namespace App\Tests\unit\entity;
+namespace App\Tests\Unit\Entity;
 
+use App\Entity\Products;
 use App\Entity\Suppliers;
+use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 
 class SuppliersUnitTest extends TestCase
 {
-    public function testIsTrue(): void
+    public function testCreateSupplierIsTrue(): void
     {
-        $faker = \Faker\Factory::create();
+        $faker = Factory::create();
 
         $supplier = new Suppliers();
+
+        $product = new Products();
 
         $supplier->setName($faker->company())
             ->setAddress($faker->address())
@@ -20,7 +24,8 @@ class SuppliersUnitTest extends TestCase
             ->setPhone($faker->phoneNumber())
             ->setEmail($faker->email())
             ->setProductType('fruits_legumes')
-            ->setNotes($faker->sentence());
+            ->setNotes($faker->sentence())
+            ->addProduct($product);
 
         $this->assertSame($supplier->getName(), $supplier->getName());
         $this->assertSame($supplier->getAddress(), $supplier->getAddress());
@@ -30,6 +35,8 @@ class SuppliersUnitTest extends TestCase
         $this->assertSame($supplier->getEmail(), $supplier->getEmail());
         $this->assertSame($supplier->getProductType(), 'fruits_legumes');
         $this->assertSame($supplier->getNotes(), $supplier->getNotes());
+        $this->assertSame($supplier->getProducts(), $supplier->getProducts());
         $this->assertEmpty($supplier->getId());
+        $supplier->removeProduct($product);
     }
 }

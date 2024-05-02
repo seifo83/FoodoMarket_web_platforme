@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page Fournisseur{% endblock %}
+
+{% block body %}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="notification {% if type == 'success' %}is-success{% elseif type == 'error' %}is-danger{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+
+                <div class="column is-4">
+                    <a href="{{ path('supplier_new') }}" class="button is-primary">Ajouter un nouveau fournisseur</a>
+                </div>
+
+                <div class="column is-7">
+                        <form class="field is-grouped is-centered" action="{{ path('app_suppliers') }}" method="GET">
+                            <p class="control is-expanded">
+                                <input class="input"  type="text"  name="filter" value="{% if filter is defined %}{{ filter }}{% endif %}" placeholder="Rechercher un fournisseur">
+                            </p>
+                            <p class="control">
+                                <button class="button is-primary">Rechercher</button>
+                            </p>
+                        </form>
+                </div>
+
+                {% for supplier in suppliers %}
+                    <div class="column is-4 mt-4">
+                        <div class="card">
+                            <div class="card-content">
+                                <p class="title">{{ supplier.name }}</p>
+                                <p class="subtitle is-9 mt-4">Type de Produit: {{ supplier.getProductType() }}</p>
+                                <p>Télephone: {{ supplier.phone }}</p>
+                                <p> Addresse: {{ supplier.address}} </p>
+                                <p>Ville: {{ supplier.country }}</p>
+                                <p>Pays: {{ supplier.city }}</p>
+                                <p>Note: {{ supplier.getNotes()|u.truncate(18, '...', false) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor%}
+            </div>
+        </div>
+        {% if filter is not empty %}
+            <div class="columns is-centered">
+                <div class="column is-half has-text-centered">
+                    <a href="{{ path('app_suppliers') }}" class="button is-link">Retour à la liste</a>
+                </div>
+            </div>
+        {% endif %}
+    </section>
+
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <div class="d-flex justify-content-center p-lg-4">
+                {% do suppliers.setPageRange(2) %}
+                {{ knp_pagination_render(suppliers, 'base/pagination.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

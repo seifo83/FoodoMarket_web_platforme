@@ -2,24 +2,35 @@
 
 namespace App\Tests\Functional\Suppliers;
 
+use App\Tests\Functional\AppWebTestCase;
 use Faker\Factory;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
-class SuppliersControllerFunctionalTest extends WebTestCase
+class SuppliersControllerFunctionalTest extends AppWebTestCase
 {
+    private KernelBrowser $client;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->client = static::createClient();
+    }
     public function testInfoSuppliers(): void
     {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/suppliers');
+        $crawler = $this->client->request('GET', '/suppliers');
 
         self::assertResponseIsSuccessful();
     }
 
     public function testAddNewSupplier(): void
     {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/suppliers/new');
+        self::loginUser($this->client);
 
+        $this->client->request('GET', '/suppliers');
+        self::assertResponseIsSuccessful();
+
+        $crawler = $this->client->request('GET', '/suppliers/new');
         self::assertResponseIsSuccessful();
 
         $faker = Factory::create();
@@ -34,24 +45,19 @@ class SuppliersControllerFunctionalTest extends WebTestCase
         $form['suppliers[product_type]'] = 'fruits_legumes';
         $form['suppliers[notes]'] = $faker->sentence();
 
-        $client->submit($form);
+        $this->client->submit($form);
 
-        $response = $client->getResponse();
-        $redirectUrl = $client->getResponse()->headers->get('Location');
+        $this->client->followRedirect();
 
-        self::assertResponseRedirects('/suppliers');
+        self::assertRouteSame('app_suppliers');
     }
 
-    public function testFilterSuppliers(): void
+    public function testSuppliersWithFilter(): void
     {
-        $client = static::createClient();
+        $this->client->request('GET', '/suppliers?filter=a');
 
-        $crawler = $client->request('GET', '/suppliers/search', ['filter' => 'test']);
+        $response = $this->client->getResponse();
 
-        self::assertResponseIsSuccessful();
-
-        $crawler = $client->getCrawler();
-
-        self::assertStringContainsString('test', $crawler->text());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

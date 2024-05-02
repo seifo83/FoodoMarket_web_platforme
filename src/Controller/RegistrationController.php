@@ -41,6 +41,7 @@ class RegistrationController extends AbstractController
             );
 
             $user->setRoles(['ROLE_USER']);
+            $user->setCreatedAt();
 
             $this->entityManager->persist($user);
             $this->entityManager->flush();
