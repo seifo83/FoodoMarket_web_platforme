@@ -1,16 +1,25 @@
 <?php
 
-namespace App\Tests\Functional\security;
+namespace App\Tests\Functional\Security;
 
 use App\Entity\User;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SecurityControllerFunctionalTest extends WebTestCase
 {
+    private KernelBrowser $client;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->client = static::createClient();
+    }
+
     public function testLogin(): void
     {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/login');
+        $crawler = $this->client->request('GET', '/login');
 
         self::assertResponseIsSuccessful();
 
@@ -20,15 +29,13 @@ class SecurityControllerFunctionalTest extends WebTestCase
 
     public function testLogout(): void
     {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/login');
+        $crawler = $this->client->request('GET', '/login');
 
         $entityManager = static::$container->get('doctrine')->getManager();
         $userRepository = $entityManager->getRepository(User::class);
 
         /** @var User|null $user */
-        $user = $userRepository->findOneBy(['email' => 'imcclure@gmail.com']);
+        $user = $userRepository->findOneBy(['email' => 'test@example.com']);
 
         if (null === $user) {
             throw new \RuntimeException('Aucun utilisateur trouvé avec cet e-mail.');
@@ -37,13 +44,13 @@ class SecurityControllerFunctionalTest extends WebTestCase
         $form = $crawler->selectButton('Connexion')->form();
         $form['email'] = $user->getEmail() ?? '';
         $form['password'] = 'password';
-        $client->submit($form);
+        $this->client->submit($form);
 
         self::assertResponseRedirects('/home');
 
-        $client->request('GET', '/logout');
+        $this->client->request('GET', '/logout');
 
-        $crawler = $client->followRedirect();
+        $crawler = $this->client->followRedirect();
         self::assertSelectorTextContains('h1', 'Bienvenue sur FoodoMarket');
     }
 }

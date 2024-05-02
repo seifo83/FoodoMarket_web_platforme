@@ -3,12 +3,19 @@
 namespace App\Entity;
 
 use App\Repository\SuppliersRepository;
+use App\Traits\TimestampableTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: SuppliersRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class Suppliers
 {
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -29,7 +36,7 @@ class Suppliers
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
@@ -37,6 +44,18 @@ class Suppliers
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
+
+    #[ORM\OneToMany(mappedBy: 'suppliers', targetEntity: Products::class, orphanRemoval: true)]
+    private Collection $Products;
+
+    #[ORM\ManyToOne(inversedBy: 'suppliers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    public function __construct()
+    {
+        $this->Products = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -135,6 +154,48 @@ class Suppliers
     public function setNotes(?string $notes): static
     {
         $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Products>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->Products;
+    }
+
+    public function addProduct(Products $product): static
+    {
+        if (!$this->Products->contains($product)) {
+            $this->Products->add($product);
+            $product->setSuppliers($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Products $product): static
+    {
+        if ($this->Products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getSuppliers() === $this) {
+                $product->setSuppliers(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

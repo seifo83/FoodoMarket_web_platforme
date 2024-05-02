@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\unit\register;
+namespace App\Tests\Unit\Form;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;

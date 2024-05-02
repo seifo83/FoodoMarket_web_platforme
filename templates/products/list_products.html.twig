@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue de produits{% endblock %}
+
+{% block body %}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="notification {% if type == 'success' %}is-primary{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="container">
+            <h1 class="title">Catalogue de produits</h1>
+            <div class="mb-3">
+                <div class="buttons are-medium">
+                    <a href="{{ path('app_products_add') }}" class="button is-primary">Ajouter un produit</a>
+                    <a href="#" class="button is-primary ml-auto">Importer un fichier</a>
+                </div>
+            </div>
+        <div class="section">
+            <div class="columns is-multiline">
+                {% for product in products %}
+                    <div class="column is-one-third">
+                        <a href="{{ path('app_products_show', {'id': product.id}) }}" class="has-text-centered">
+                            <div class="card">
+                                <div class="image is-4by2">
+                                    <img src="" alt="Image Produit">
+                                </div>
+                                <div class="card-content " >
+                                    <p class="title is-5">{{ product.getSuppliers().name }}</p>
+                                    <p class="subtitle is-9">{{ product.description|u.truncate(20, '...', false) }}</p>
+                                    <p class="subtitle is-6">Code: {{ product.code }}</p>
+                                    <div class="has-background-primary price are-medium has-text-black has-text-centered py-2" style="width: 19rem; border-radius: 30px; margin-left: 25px;">
+                                        <p class="is-size-6 ">Prix: {{ product.price|number_format(2, '.', ',') }} €</p>
+                                    </div>
+                                    <div class="has-text-centered mt-3">
+                                        <a href="{{ path('app_products_edit', {'id': product.id}) }}" class="button is-link">
+                                            <span class="icon is-large has-text-white">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
+                                        </a>
+                                        <form method="post" action="{{ path('app_products_delete', {'id': product.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit?');" style="display: inline;">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                                            <button type="submit" class="button is-danger is-danger">
+                                                <span class="icon is-large has-text-white">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% if filter is not empty %}
+            <div class="columns is-centered">
+                <div class="column is-half has-text-centered">
+                    <a href="{{ path('app_products') }}" class="button is-link">Retour à la liste</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <div class="d-flex justify-content-center p-lg-4">
+                {% do products.setPageRange(2) %}
+                {{ knp_pagination_render(products, 'base/pagination.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

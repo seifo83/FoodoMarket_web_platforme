@@ -8,8 +8,23 @@
             <div class="container">
                 <h1 class="title is-1 has-text-white">Bienvenue sur FoodoMarket</h1>
                 <h2 class="subtitle is-3 has-text-white">La meilleure destination pour des produits de qualité.</h2>
-                <a href="#" class="button is-light is-large">Découvrez nos produits</a>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <a href="{{ path('app_products') }}" class="button is-light is-large">Découvrez nos produits</a>
+                {% endif %}
+            </div>
+            <div class="container">
+                <div class="subtitle has-text-white" >Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque doloribus nostrum quidem sapiente sed
+                    tenetur veniam! Aliquid animi at doloribus in itaque iusto minima obcaecati quaerat rerum, sunt tempora
+                    tenetur.
+                </div>
+                <div class="subtitle has-text-white" >Ab aliquid atque dicta dolorem earum, eius et id illum in inventore placeat quaerat qui quod, tempora,
+                    totam. Doloremque doloribus ea iure laboriosam nam quibusdam sint? Assumenda harum illum neque!
+                </div>
+                <div class="subtitle has-text-white" >Ea eaque eveniet numquam voluptas! Accusantium aliquam animi aperiam delectus deleniti deserunt dolorum ea
+                    eaque expedita fuga illum ipsam ipsum modi nostrum odit quo quos ratione rerum saepe, sapiente tempora!
+                </div>
             </div>
         </div>
+
     </section>
 {% endblock %}

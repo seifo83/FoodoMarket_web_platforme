@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du produit{% endblock %}
+
+{% block body %}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="notification {% if type == 'success' %}is-success{% elseif type == 'error' %}is-danger{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="container mt-6">
+        <h1 class="title has-text-centered has-text-black">Détails du produit</h1>
+        <div class="row is-centered">
+
+            <div class="column">
+                <div class="columns box">
+                    <div class="column" >
+                        <p class="subtitle has-text-centered has-text-white">Fournisseur:</p>
+                    </div>
+                    <div class="column">
+                        <p class="has-text-centered has-text-white">{{ product.getSuppliers().name }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column mt-4">
+                    <div class="columns box">
+                        <div class="column" >
+                            <p class="subtitle has-text-centered has-text-white">Description:</p>
+                        </div>
+                        <div class="column">
+                            <p class="has-text-centered has-text-white">{{ product.description }}</p>
+                        </div>
+                    </div>
+            </div>
+            <div class="row is-centered mt-4">
+                <div class="column">
+                    <div class="columns box">
+                        <div class="column">
+                            <p class="subtitle has-text-centered has-text-white">Code:</p>
+                        </div>
+                        <div class="column">
+                            <p class="has-text-centered has-text-white">{{ product.code }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row is-centered mt-4">
+                <div class="column">
+                    <div class="columns box">
+                        <div class="column">
+                            <p class="subtitle has-text-centered has-text-white">Prix:</p>
+                        </div>
+                        <div class="column">
+                            <p class="has-text-centered has-text-white">{{ product.price }} €</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons is-centered mt-6 mb-6">
+            <a href="{{ path('app_products') }}" class="button is-link">Retour à la liste</a>
+            <a href="{{ path('app_products_edit', {'id': product.id}) }}" class="button is-primary">
+                <span class="icon is-large  has-text-white">
+                    <i class="fas fa-edit"></i>
+                </span>
+            </a>
+            <form method="post" class="button is-danger" action="{{ path('app_products_delete', {'id': product.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                <button class="btn">
+                    <span class="icon is-large  has-text-white">
+                        <i class="fas fa-trash-alt"></i>
+                        </span>
+                </button>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

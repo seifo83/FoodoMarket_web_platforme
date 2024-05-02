@@ -3,34 +3,56 @@
 namespace App\Controller;
 
 use App\Entity\Suppliers;
+use App\Entity\User;
 use App\Form\SuppliersType;
 use App\Repository\SuppliersRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class SuppliersController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
+    private Security $security;
     private SuppliersRepository $repository;
+
+    private PaginatorInterface $paginator;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        SuppliersRepository $repository
+        Security $security,
+        SuppliersRepository $repository,
+        PaginatorInterface $paginator
     ) {
         $this->entityManager = $entityManager;
+        $this->security = $security;
         $this->repository = $repository;
+        $this->paginator = $paginator;
     }
 
     #[Route('/suppliers', name: 'app_suppliers')]
-    public function infoSuppliers(): Response
+    public function infoSuppliers(Request $request): Response
     {
-        $suppliers = $this->repository->findAll();
+        $filter = $request->query->get('filter') ?? '';
 
-        return $this->render('suppliers/info.html.twig', [
+        $data = $filter !== ''
+            ? $this->repository->findByFilteredSuppliers($filter)
+            : $this->repository->findAll();
+
+
+        $suppliers = $this->paginator->paginate(
+            $data,
+            $request->query->getInt('page', 1),
+            6
+        );
+
+        return $this->render('suppliers/list_suppliers.html.twig', [
             'suppliers' => $suppliers,
+            'filter' => $filter
         ]);
     }
 
@@ -41,7 +63,12 @@ class SuppliersController extends AbstractController
         $form = $this->createForm(SuppliersType::class, $supplier);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $user = $this->security->getUser();
+
+        if ($user instanceof User && $form->isSubmitted() && $form->isValid()) {
+            $supplier->setUser($user);
+            $supplier->setCreatedAt();
+
             $this->entityManager->persist($supplier);
             $this->entityManager->flush();
 
@@ -55,18 +82,6 @@ class SuppliersController extends AbstractController
 
         return $this->render('suppliers/add_supplier.html.twig', [
             'form' => $form->createView(),
-        ]);
-    }
-
-    #[Route('/suppliers/search', name: 'app_suppliers_filter')]
-    public function filterSupplier(Request $request): Response
-    {
-        $filter = $request->query->get('filter');
-
-        $filteredSuppliers = $this->repository->findByFilteredSuppliers($filter);
-
-        return $this->render('suppliers/info.html.twig', [
-            'suppliers' => $filteredSuppliers,
         ]);
     }
 }

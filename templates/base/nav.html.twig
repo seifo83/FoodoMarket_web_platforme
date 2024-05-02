@@ -13,31 +13,34 @@
                 Accueil
             </a>
             <a class="navbar-item" href="#">
-                Nouveautés
-            </a>
-            <a class="navbar-item" href="#">
-                Catalogue de Produits
+                Promotion
             </a>
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a class="navbar-item" href="{{ path('app_products') }}">
+                    Catalogue de Produits
+                </a>
                 <a class="navbar-item" href="{{ path('app_suppliers') }}">
                     Fournisseur
                 </a>
             {% endif %}
         </div>
 
+
         <div class="navbar-item">
-            <form action="#" class="is-flex" style="width: 100%;">
-                <div class="field has-addons" style="flex-grow: 1;">
-                    <div class="control is-primary text-bold is-expanded search-text">
-                        <input name="query" type="text" class="input is-small" placeholder="Rechercher un produit ..." required>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <form action="{{ path('app_products') }}" class="is-flex" style="width: 100%;" method="get">
+                    <div class="field has-addons" style="flex-grow: 1;">
+                        <div class="control is-primary text-bold is-expanded search-text">
+                            <input class="input is-small" type="text" name="filter" value="{% if filter is defined %}{{ filter }}{% endif %}" placeholder="Rechercher un produit ..." required>
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-primary is-small">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="control">
-                        <button type="submit" class="button is-primary is-small">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            {% endif %}
         </div>
 
         <div class="navbar-end">

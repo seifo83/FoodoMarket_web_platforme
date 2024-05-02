@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Traits\TimestampableTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -12,6 +15,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -37,6 +42,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Suppliers::class)]
+    private Collection $suppliers;
+
+    public function __construct()
+    {
+        $this->suppliers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -159,6 +172,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Suppliers>
+     */
+    public function getSuppliers(): Collection
+    {
+        return $this->suppliers;
+    }
+
+    public function addSupplier(Suppliers $supplier): static
+    {
+        if (!$this->suppliers->contains($supplier)) {
+            $this->suppliers->add($supplier);
+            $supplier->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupplier(Suppliers $supplier): static
+    {
+        if ($this->suppliers->removeElement($supplier)) {
+            // set the owning side to null (unless already changed)
+            if ($supplier->getUser() === $this) {
+                $supplier->setUser(null);
+            }
+        }
 
         return $this;
     }
