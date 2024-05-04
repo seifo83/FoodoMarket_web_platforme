@@ -13,5 +13,4 @@ interface ProductImportServiceInterface
      * @return void
      */
     public function importProduct(string $fileName, Suppliers $suppliers, array $productInfoFile): void;
-
 }

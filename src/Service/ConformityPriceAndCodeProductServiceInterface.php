@@ -12,6 +12,9 @@ interface ConformityPriceAndCodeProductServiceInterface
      * @param MessageBusInterface|null $messageBus
      * @return array
      */
-    public function checkConformityPriceAndCodeProduct(?string $code, ?float $price, MessageBusInterface $messageBus = null): array;
-
+    public function checkConformityPriceAndCodeProduct(
+        ?string $code,
+        ?float $price,
+        MessageBusInterface $messageBus = null
+    ): array;
 }

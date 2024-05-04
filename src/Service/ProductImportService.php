@@ -21,12 +21,15 @@ class ProductImportService implements ProductImportServiceInterface
      */
     public function importProduct(string $fileName, Suppliers $suppliers, array $productInfoFile): void
     {
-        $conformity = $this->conformityPriceAndCodeProduct->checkConformityPriceAndCodeProduct($productInfoFile['code'], $productInfoFile['price']);
+        $conformity = $this->conformityPriceAndCodeProduct
+            ->checkConformityPriceAndCodeProduct($productInfoFile['code'], $productInfoFile['price']);
 
         if (empty($conformity)) {
-            $this->productUpdateFromFile->addOrUpdateProductFromImportFile($fileName, $suppliers, $productInfoFile);
+            $this->productUpdateFromFile
+                ->addOrUpdateProductFromImportFile($fileName, $suppliers, $productInfoFile);
         } else {
-            $this->notificationSender->sendNonConformityNotification($fileName, $suppliers, $conformity[0], $productInfoFile);
+            $this->notificationSender
+                ->sendNonConformityNotification($fileName, $suppliers, $conformity[0], $productInfoFile);
         }
     }
 }

@@ -49,8 +49,12 @@ class ProductUpdateFromFileService implements ProductUpdateFromFileServiceInterf
      * @param $productInfoFile
      * @return void
      */
-    public function updateExistingProduct(string $fileName, Products $product, Suppliers $supplier, $productInfoFile): void
-    {
+    public function updateExistingProduct(
+        string $fileName,
+        Products $product,
+        Suppliers $supplier,
+        $productInfoFile
+    ): void {
             $product->setDescription($productInfoFile['description']);
             $product->setPrice($productInfoFile['price']);
             $product->setUpdatedAt();

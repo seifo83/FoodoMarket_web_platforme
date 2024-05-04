@@ -13,8 +13,11 @@ class ConformityPriceAndCodeProductService implements ConformityPriceAndCodeProd
      * @param MessageBusInterface|null $messageBus
      * @return array
      */
-    public function checkConformityPriceAndCodeProduct(?string $code, ?float $price, MessageBusInterface $messageBus = null): array
-    {
+    public function checkConformityPriceAndCodeProduct(
+        ?string $code,
+        ?float $price,
+        MessageBusInterface $messageBus = null
+    ): array {
         if ($messageBus === null) {
             $messageBus = new MessageBus();
         }
@@ -23,7 +26,7 @@ class ConformityPriceAndCodeProductService implements ConformityPriceAndCodeProd
 
         $errors = [];
 
-        if (null === $code || null === $price || ' ' === $code || '' === $price ) {
+        if (null === $code || null === $price || ' ' === $code || '' === $price) {
             $errors[] = 'Vous avez oublié d\'ajouter le prix ou le code.';
         }
 
@@ -39,5 +42,4 @@ class ConformityPriceAndCodeProductService implements ConformityPriceAndCodeProd
         dump($errors);
         return $errors;
     }
-
 }

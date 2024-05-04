@@ -25,12 +25,11 @@ class ProcessFilesImportService implements ProcessFilesImportServiceInterface
                 $data = fgetcsv($file, 1000, ',');
 
                 if (count($data) > 0) {
-
                     $product['description'] = $data[0];
                     $product['code'] = (string) $data[1];
                     $product['price'] = (float) $data[2];
                     dump(empty($product['code']));
-dump($product);
+                    dump($product);
                     $this->productImportService->importProduct($fileName, $suppliers, $product);
                 }
             }

@@ -19,7 +19,8 @@ class NotificationSenderService implements NotificationSenderServiceInterface
      * @param array $product
      * @return void
      */
-    public function sendNonConformityNotification(string $fileName,
+    public function sendNonConformityNotification(
+        string $fileName,
         Suppliers $supplier,
         string $error,
         array $product
@@ -29,7 +30,8 @@ class NotificationSenderService implements NotificationSenderServiceInterface
         $user = $supplier->getUser();
 
         $this->messageBus->dispatch(
-            new NonConformityNotificationMessage($user->getEmail(),
+            new NonConformityNotificationMessage(
+                $user->getEmail(),
                 $supplier->getEmail(),
                 $fileName,
                 $error,
