@@ -18,14 +18,18 @@ class ProductUpdateFromFileServiceUnitTest extends TestCase
 
         $supplier = new Suppliers();
 
+
         $productUpdateService = new ProductUpdateFromFileService($productFetcherMock, $entityManagerMock);
 
-        $productCode = 'ABC123';
+        $fileName = 'file.csv';
+        $productInfoFile['description'] = 'Product description';
+        $productInfoFile['code'] = 'ABC123';
+        $productInfoFile['price'] = 10.99;
         $product = null;
 
         $productFetcherMock->expects($this->once())
             ->method('getProductByCode')
-            ->with($productCode)
+            ->with($productInfoFile['code'] )
             ->willReturn($product);
 
         $entityManagerMock->expects($this->once())
@@ -35,10 +39,9 @@ class ProductUpdateFromFileServiceUnitTest extends TestCase
             ->method('flush');
 
         $productUpdateService->addOrUpdateProductFromImportFile(
+            $fileName,
             $supplier,
-            'Product description',
-            $productCode,
-            10.99
+            $productInfoFile
         );
 
         $this->addToAssertionCount(1);
@@ -55,13 +58,19 @@ class ProductUpdateFromFileServiceUnitTest extends TestCase
 
         $product = new Products();
 
+        $fileName = 'file.csv';
+        $productInfoFile['description'] = 'New product description';
+        $productInfoFile['code'] = 'ABC123';
+        $productInfoFile['price'] = 19.99;
+
         $entityManagerMock->expects($this->once())
             ->method('flush');
 
         $productUpdateService->updateExistingProduct(
+            $fileName,
             $product,
-            'New product description',
-            19.99
+            $supplier,
+            $productInfoFile
         );
 
         $this->assertEquals('New product description', $product->getDescription());

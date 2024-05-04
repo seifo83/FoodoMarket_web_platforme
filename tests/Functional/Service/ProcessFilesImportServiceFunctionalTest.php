@@ -2,38 +2,52 @@
 
 namespace App\Tests\Functional\Service;
 
+use App\Entity\Products;
 use App\Entity\Suppliers;
-use App\Service\ProcessFilesImportService;
-use App\Service\ProductUpdateFromFileServiceInterface;
+use App\Tests\Functional\AppWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\TestCase;
 
-class ProcessFilesImportServiceFunctionalTest extends TestCase
+class ProcessFilesImportServiceFunctionalTest extends AppWebTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->client = static::createClient();
+
+        $this->entityManager = static::$container->get(EntityManagerInterface::class);
+    }
+
     public function testProcessFile(): void
     {
-        $filePath = './public/mercuriale2.csv';
+        $csvContent = "Product1,123,10.99\nProduct2,456,20.99";
+        $tempFilePath = tempnam(sys_get_temp_dir(), 'test_');
+        file_put_contents($tempFilePath, $csvContent);
 
-        if (!file_exists($filePath)) {
-            $this->markTestSkipped('Le fichier de test n\'existe pas.');
-        }
+        $container = $this->client->getContainer();
+        $processFilesImportService = $container->get('App\Service\ProcessFilesImportService');
 
-        $lineCount = count(file($filePath, FILE_SKIP_EMPTY_LINES));
+        $supplier = $this->entityManager
+            ->getRepository(Suppliers::class)
+            ->findOneBy(['id' => 1]);
 
-        $productUpdateFromFile = $this->createMock(ProductUpdateFromFileServiceInterface::class);
+        $processFilesImportService->processFile($tempFilePath, 'test.csv', $supplier);
 
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $product1 = $this->entityManager
+            ->getRepository(Products::class)
+            ->findOneBy(['code' => '123']);
 
-        $suppliers = new Suppliers();
-        $suppliers->setName('Supplier Name');
+        $product2 = $this->entityManager
+            ->getRepository(Products::class)
+            ->findOneBy(['code' => '456']);
 
-        $processFilesImportService = new ProcessFilesImportService($productUpdateFromFile);
+        $this->assertNotNull($product1);
+        $this->assertEquals('Product1', $product1->getDescription());
+        $this->assertEquals(10.99, $product1->getPrice());
 
-        $productUpdateFromFile->expects($this->exactly($lineCount))
-            ->method('addOrUpdateProductFromImportFile');
+        $this->assertNotNull($product2);
+        $this->assertEquals('Product2', $product2->getDescription());
+        $this->assertEquals(20.99, $product2->getPrice());
 
-        $processFilesImportService->processFile($filePath, $suppliers);
-
-        $this->addToAssertionCount(1);
+        unlink($tempFilePath);
     }
 }

@@ -12,7 +12,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
@@ -39,10 +38,10 @@ class MercurialsController extends AbstractController
 
     /**
      * @throws TransportExceptionInterface
-     * @codeCoverageIgnore
+     *
      */
     #[Route('/import', name: 'app_import_file')]
-    public function handleImportFile(Request $request, MailerInterface $mailer): Response
+    public function handleImportFile(Request $request): Response
     {
         $filesRecovered = $request->files->get('files');
 

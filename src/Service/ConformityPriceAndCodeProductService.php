@@ -21,8 +21,6 @@ class ConformityPriceAndCodeProductService implements ConformityPriceAndCodeProd
         if ($messageBus === null) {
             $messageBus = new MessageBus();
         }
-        dump($code);
-
 
         $errors = [];
 
@@ -39,7 +37,6 @@ class ConformityPriceAndCodeProductService implements ConformityPriceAndCodeProd
             $errors[] = 'La longueur du code produit ne peut pas dépasser 6 caractères.';
         }
 
-        dump($errors);
         return $errors;
     }
 }
