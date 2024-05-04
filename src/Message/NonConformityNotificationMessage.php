@@ -12,7 +12,8 @@ final class NonConformityNotificationMessage
     private string $description;
     private float $price;
 
-    public function __construct(string $userEmail,
+    public function __construct(
+        string $userEmail,
         string $supplierEmail,
         string $fileName,
         string $error,

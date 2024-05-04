@@ -13,10 +13,10 @@ interface NotificationSenderServiceInterface
      * @param array $product
      * @return void
      */
-    public function sendNonConformityNotification(string $fileName,
+    public function sendNonConformityNotification(
+        string $fileName,
         Suppliers $supplier,
         string $error,
         array $product
     ): void;
-
 }

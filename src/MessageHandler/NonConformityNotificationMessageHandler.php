@@ -10,7 +10,6 @@ use Symfony\Component\Mime\Email;
 
 final class NonConformityNotificationMessageHandler implements MessageHandlerInterface
 {
-
     public function __construct(private MailerInterface $mailer)
     {
     }
