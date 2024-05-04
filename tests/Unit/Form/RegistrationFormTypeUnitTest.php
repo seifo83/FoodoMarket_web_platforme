@@ -8,7 +8,7 @@ use Symfony\Component\Form\Test\TypeTestCase;
 
 class RegistrationFormTypeUnitTest extends TypeTestCase
 {
-    public function testSubmitValidData(): void
+    public function testSubmitValidDataUser(): void
     {
         $formData = [
             'firstName' => 'John',

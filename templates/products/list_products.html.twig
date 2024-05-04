@@ -5,7 +5,7 @@
 {% block body %}
     {% for type, messages in app.flashes %}
         {% for message in messages %}
-            <div class="notification {% if type == 'success' %}is-primary{% endif %}">
+            <div id="notification" class="notification is-success is-hidden {% if type == 'success' %}is-primary{% endif %}">
                 {{ message }}
             </div>
         {% endfor %}
@@ -16,7 +16,7 @@
             <div class="mb-3">
                 <div class="buttons are-medium">
                     <a href="{{ path('app_products_add') }}" class="button is-primary">Ajouter un produit</a>
-                    <a href="#" class="button is-primary ml-auto">Importer un fichier</a>
+                    <a href="{{ path('app_import_interface') }}" class="button is-primary ml-auto">Importer un fichier</a>
                 </div>
             </div>
         <div class="section">

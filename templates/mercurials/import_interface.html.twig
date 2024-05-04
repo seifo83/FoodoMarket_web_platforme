@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Interface d'importation mercuriales{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="columns interface-import is-centered is-vcentered">
+            <div class="column is-half">
+                <h1 class="title has-text-centered has-text-black">Importation Mercuriales</h1>
+                <div class="box">
+                    <form action="{{ path('app_import_file') }}" method="post" enctype="multipart/form-data">
+                        <div class="field is-horizontal">
+                            <label class="label label-space is-normal">Sélectionner le fournisseur :</label>
+                            <div class="field-body">
+                                <div class="field">
+                                    <div class="control">
+                                        <div class="select">
+                                            <select name="supplier" id="supplierSelect">
+                                                {% for supplier in suppliers %}
+                                                    <option name="supplier_id" value="{{ supplier.id }}">{{ supplier.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="file">
+                            <label class="file-label">
+                                <input class="file-input" type="file" name="files[]" id="file" accept=".csv" multiple onchange="displaySelectedFiles()">
+                                <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label">
+                                    Choisissez un fichier…
+                                </span>
+                            </span>
+                            </label>
+                        </div>
+                        <div id="selectedFiles" class="selected-files has-text-white">
+                            <!-- dans cette div ou les noms des fichiers seront afficher -->
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button type="submit" class="button is-primary">Importer les fichiers</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ asset('js/upload.js') }}"></script>
+{% endblock %}

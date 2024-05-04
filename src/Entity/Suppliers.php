@@ -52,9 +52,13 @@ class Suppliers
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Mercurials::class)]
+    private Collection $mercurials;
+
     public function __construct()
     {
         $this->Products = new ArrayCollection();
+        $this->mercurials = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -196,6 +200,36 @@ class Suppliers
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Mercurials>
+     */
+    public function getMercurials(): Collection
+    {
+        return $this->mercurials;
+    }
+
+    public function addMercurial(Mercurials $mercurial): static
+    {
+        if (!$this->mercurials->contains($mercurial)) {
+            $this->mercurials->add($mercurial);
+            $mercurial->setSupplier($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMercurial(Mercurials $mercurial): static
+    {
+        if ($this->mercurials->removeElement($mercurial)) {
+            // set the owning side to null (unless already changed)
+            if ($mercurial->getSupplier() === $this) {
+                $mercurial->setSupplier(null);
+            }
+        }
 
         return $this;
     }

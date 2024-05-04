@@ -13,11 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     #[Route('/register', name: 'app_register')]
@@ -45,6 +42,12 @@ class RegistrationController extends AbstractController
 
             $this->entityManager->persist($user);
             $this->entityManager->flush();
+
+            $this->addFlash(
+                'success',
+                'Félicitations ! Votre inscription a été effectuée avec succès.
+                Vous pouvez maintenant vous connecter avec votre profil.'
+            );
 
             return $this->redirectToRoute('app_login');
         }

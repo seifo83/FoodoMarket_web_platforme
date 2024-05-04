@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Suppliers;
 use App\Entity\User;
+use App\Fetcher\SupplierFetcherInterface;
 use App\Form\SuppliersType;
-use App\Repository\SuppliersRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,22 +16,12 @@ use Symfony\Component\Security\Core\Security;
 
 class SuppliersController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-    private Security $security;
-    private SuppliersRepository $repository;
-
-    private PaginatorInterface $paginator;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        Security $security,
-        SuppliersRepository $repository,
-        PaginatorInterface $paginator
+        private EntityManagerInterface $entityManager,
+        private Security $security,
+        private SupplierFetcherInterface $supplierFetcher,
+        private PaginatorInterface $paginator
     ) {
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-        $this->repository = $repository;
-        $this->paginator = $paginator;
     }
 
     #[Route('/suppliers', name: 'app_suppliers')]
@@ -40,8 +30,8 @@ class SuppliersController extends AbstractController
         $filter = $request->query->get('filter') ?? '';
 
         $data = $filter !== ''
-            ? $this->repository->findByFilteredSuppliers($filter)
-            : $this->repository->findAll();
+            ? $this->supplierFetcher->getSupplierByFilter($filter)
+            : $this->supplierFetcher->getAllSuppliers();
 
 
         $suppliers = $this->paginator->paginate(

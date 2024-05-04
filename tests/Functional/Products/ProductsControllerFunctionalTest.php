@@ -47,15 +47,11 @@ class ProductsControllerFunctionalTest extends AppWebTestCase
         $crawler = $this->client->request('GET', '/products/add');
         self::assertResponseIsSuccessful();
 
-        $suppliers = $crawler->filter('select[name="products[suppliers]"] option')->extract(['value']);
-
-        $randomSupplier = $suppliers[array_rand($suppliers)];
-
         $form = $crawler->filter('form[name=products]')->form([
             'products[description]' => 'Description du produit',
             'products[code]' => '123456',
             'products[price]' => '19.99',
-            'products[suppliers]' => $randomSupplier,
+            'products[suppliers]' => 1,
         ]);
 
         $this->client->submit($form);
@@ -92,8 +88,6 @@ class ProductsControllerFunctionalTest extends AppWebTestCase
             ->findOneBy(['id' => 1]);
 
         self::assertNotEmpty($product->getUpdatedAt());
-
-
     }
 
     /**
