@@ -14,7 +14,7 @@ class ProductsUnitTest extends TestCase
         $faker = Factory::create();
 
         $description = $faker->sentence();
-        $code = $faker->randomNumber();
+        $code = $faker->bothify('??##??');
         $price = $faker->randomFloat(2, 0, 1000);
 
         $supplier = new Suppliers();

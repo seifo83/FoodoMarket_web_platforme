@@ -3,8 +3,14 @@
 
 @import "~bulma";
 
+
 body {
-    background-color: #efeeee;
+  background-color: #efeeee;
+  margin: 0;
+}
+
+.footer {
+  bottom: 0;
 }
 
 //Navbar
@@ -33,4 +39,25 @@ body {
 
 .card-content.price {
   border-radius: 30px;
+}
+
+// Interface Import Mercurial
+.interface-import {
+  height: 70vh;
+}
+
+.selected-files {
+  margin: 25px;
+  padding: 10px;
+}
+
+.selected-files p {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.label-space {
+  padding-top: 5px;
+  margin-right: 20px;
 }

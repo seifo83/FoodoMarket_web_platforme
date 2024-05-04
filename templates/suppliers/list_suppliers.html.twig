@@ -5,7 +5,7 @@
 {% block body %}
     {% for type, messages in app.flashes %}
         {% for message in messages %}
-            <div class="notification {% if type == 'success' %}is-success{% elseif type == 'error' %}is-danger{% endif %}">
+            <div id="notification" class="notification is-success is-hidden {% if type == 'success' %}is-primary{% endif %}">
                 {{ message }}
             </div>
         {% endfor %}
@@ -34,7 +34,7 @@
                     <div class="column is-4 mt-4">
                         <div class="card">
                             <div class="card-content">
-                                <p class="title">{{ supplier.name }}</p>
+                                <p class="title">{{ supplier.name|u.truncate(18, '...', false) }}</p>
                                 <p class="subtitle is-9 mt-4">Type de Produit: {{ supplier.getProductType() }}</p>
                                 <p>Télephone: {{ supplier.phone }}</p>
                                 <p> Addresse: {{ supplier.address}} </p>

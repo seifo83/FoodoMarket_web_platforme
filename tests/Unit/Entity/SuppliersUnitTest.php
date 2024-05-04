@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Entity;
 
+use App\Entity\Mercurials;
 use App\Entity\Products;
 use App\Entity\Suppliers;
 use Faker\Factory;
@@ -17,6 +18,8 @@ class SuppliersUnitTest extends TestCase
 
         $product = new Products();
 
+        $mercurial = new Mercurials();
+
         $supplier->setName($faker->company())
             ->setAddress($faker->address())
             ->setCity($faker->city())
@@ -25,6 +28,7 @@ class SuppliersUnitTest extends TestCase
             ->setEmail($faker->email())
             ->setProductType('fruits_legumes')
             ->setNotes($faker->sentence())
+            ->addMercurial($mercurial)
             ->addProduct($product);
 
         $this->assertSame($supplier->getName(), $supplier->getName());
@@ -36,7 +40,9 @@ class SuppliersUnitTest extends TestCase
         $this->assertSame($supplier->getProductType(), 'fruits_legumes');
         $this->assertSame($supplier->getNotes(), $supplier->getNotes());
         $this->assertSame($supplier->getProducts(), $supplier->getProducts());
+        $this->assertSame($supplier->getMercurials(), $supplier->getMercurials());
         $this->assertEmpty($supplier->getId());
         $supplier->removeProduct($product);
+        $supplier->removeMercurial($mercurial);
     }
 }

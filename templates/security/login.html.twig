@@ -3,6 +3,14 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div id="notification" class="notification is-success is-hidden {% if type == 'success' %}is-primary{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
     <section class="section">
         <div class="container">
             <div class="columns is-centered">

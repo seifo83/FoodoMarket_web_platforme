@@ -3,11 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Products;
-use App\Entity\Suppliers;
+use App\Fetcher\ProductFetcherInterface;
+use App\Fetcher\SupplierFetcherInterface;
 use App\Form\ProductsType;
-use App\Repository\ProductsRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use JetBrains\PhpStorm\NoReturn;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,18 +15,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProductsController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-    private ProductsRepository $productsRepository;
-    private PaginatorInterface $paginator;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        ProductsRepository $productsRepository,
-        PaginatorInterface $paginator
+        private EntityManagerInterface $entityManager,
+        private SupplierFetcherInterface $supplierFetcher,
+        private ProductFetcherInterface $productFetcher,
+        private PaginatorInterface $paginator
     ) {
-        $this->entityManager = $entityManager;
-        $this->productsRepository = $productsRepository;
-        $this->paginator = $paginator;
     }
 
     #[Route('/products', name: 'app_products')]
@@ -36,8 +29,8 @@ class ProductsController extends AbstractController
         $filter = $request->query->get('filter') ?? '';
 
         $data = $filter !== ''
-            ? $this->productsRepository->findByDescriptionOrCode($filter)
-            : $this->productsRepository->findAll();
+            ? $this->productFetcher->getProductByDescriptionOrCode($filter)
+            : $this->productFetcher->getAllProducts();
 
         $products = $this->paginator->paginate(
             $data,
@@ -55,8 +48,7 @@ class ProductsController extends AbstractController
     public function new(Request $request): Response
     {
         $product = new Products();
-
-        $suppliers = $this->entityManager->getRepository(Suppliers::class)->findAll();
+        $suppliers =  $this->supplierFetcher->getAllSuppliers();
 
         $form = $this->createForm(ProductsType::class, $product, [
                 'suppliers' => $suppliers
@@ -95,7 +87,7 @@ class ProductsController extends AbstractController
     #[Route('/{id}/product/edit', name: 'app_products_edit')]
     public function edit(Request $request, Products $product, EntityManagerInterface $entityManager): Response
     {
-        $suppliers = $this->entityManager->getRepository(Suppliers::class)->findAll();
+        $suppliers =  $this->supplierFetcher->getAllSuppliers();
 
         $form = $this->createForm(ProductsType::class, $product, [
             'suppliers' => $suppliers

@@ -20,7 +20,7 @@ class Products
     private ?string $description = null;
 
     #[ORM\Column]
-    private ?int $code = null;
+    private ?string $code = null;
 
     #[ORM\Column]
     private ?float $price = null;
@@ -46,12 +46,12 @@ class Products
         return $this;
     }
 
-    public function getCode(): ?int
+    public function getCode(): ?string
     {
         return $this->code;
     }
 
-    public function setCode(int $code): static
+    public function setCode(string $code): static
     {
         $this->code = $code;
 
