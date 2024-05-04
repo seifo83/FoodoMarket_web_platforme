@@ -28,8 +28,7 @@ class ProcessFilesImportService implements ProcessFilesImportServiceInterface
                     $product['description'] = $data[0];
                     $product['code'] = (string) $data[1];
                     $product['price'] = (float) $data[2];
-                    dump(empty($product['code']));
-                    dump($product);
+
                     $this->productImportService->importProduct($fileName, $suppliers, $product);
                 }
             }

@@ -2,9 +2,7 @@
 
 namespace App\Tests\Functional\Mercurials;
 
-use App\Repository\SuppliersRepository;
 use App\Tests\Functional\AppWebTestCase;
-use Doctrine\ORM\EntityManagerInterface;
 
 class MercurialsControllerFunctionalTest extends AppWebTestCase
 {
@@ -12,10 +10,6 @@ class MercurialsControllerFunctionalTest extends AppWebTestCase
     {
         parent::setUp();
         $this->client = static::createClient();
-
-        $this->entityManager = static::$container->get(EntityManagerInterface::class);
-        $this->suppliersRepository = static::$container->get(SuppliersRepository::class);
-
     }
     public function testShowImportInterface(): void
     {

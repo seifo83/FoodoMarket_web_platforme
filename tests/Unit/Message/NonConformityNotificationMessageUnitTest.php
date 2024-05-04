@@ -5,7 +5,7 @@ namespace App\Tests\Unit\Message;
 use App\Message\NonConformityNotificationMessage;
 use PHPUnit\Framework\TestCase;
 
-class NonConformityNotificationMessageHandlerUnitTest extends TestCase
+class NonConformityNotificationMessageUnitTest extends TestCase
 {
     public function testConstructorAndGetters(): void
     {
@@ -18,7 +18,6 @@ class NonConformityNotificationMessageHandlerUnitTest extends TestCase
         $description = 'Product description';
         $price = 10.99;
 
-        // Création de l'objet NonConformityNotificationMessage
         $message = new NonConformityNotificationMessage(
             $userEmail,
             $supplierEmail,
