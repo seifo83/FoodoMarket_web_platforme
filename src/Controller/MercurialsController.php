@@ -56,7 +56,7 @@ class MercurialsController extends AbstractController
             $fileName = $file->getClientOriginalName();
 
             try {
-                $this->filesImportService->processFile($file, $supplier);
+                $this->filesImportService->processFile($file, $fileName, $supplier);
             } catch (\Exception $exception) {
                 return new Response('Erreur lors du traitement du fichier : '
                     . $exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);

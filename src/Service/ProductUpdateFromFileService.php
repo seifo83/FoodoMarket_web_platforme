@@ -4,8 +4,12 @@ namespace App\Service;
 
 use App\Entity\Products;
 use App\Entity\Suppliers;
+use App\Entity\User;
 use App\Fetcher\ProductFetcherInterface;
+use App\Message\NonConformityNotificationMessage;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\MessageBus;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class ProductUpdateFromFileService implements ProductUpdateFromFileServiceInterface
 {
@@ -16,47 +20,60 @@ class ProductUpdateFromFileService implements ProductUpdateFromFileServiceInterf
     }
 
     /**
+     * @param string $fileName
      * @param Suppliers $suppliers
-     * @param string $productDescription
-     * @param string $productCode
-     * @param float $productPrice
+     * @param array $productInfoFile
      * @return void
      */
     public function addOrUpdateProductFromImportFile(
+        string $fileName,
         Suppliers $suppliers,
-        string $productDescription,
-        string $productCode,
-        float $productPrice
+        array $productInfoFile,
     ): void {
-        /** @var Products|null $product */
-        $product = $this->productFetcher->getProductByCode($productCode);
 
-        if ($product?->getCode()) {
-            $this->updateExistingProduct($product, $productDescription, $productPrice);
+        $product = $this->productFetcher->getProductByCode($productInfoFile['code']);
+
+
+
+        if (null !== $product) {
+            $this->updateExistingProduct($fileName, $product, $suppliers, $productInfoFile);
         } else {
-            $this->addNewProduct($suppliers, $productDescription, $productCode, $productPrice);
+            $this->addNewProduct($fileName, $suppliers, $productInfoFile);
         }
     }
 
-    public function updateExistingProduct(Products $product, string $description, float $price): void
+    /**
+     * @param string $fileName
+     * @param Products $product
+     * @param Suppliers $supplier
+     * @param $productInfoFile
+     * @return void
+     */
+    public function updateExistingProduct(string $fileName, Products $product, Suppliers $supplier, $productInfoFile): void
     {
-        $product->setDescription($description);
-        $product->setPrice($price);
-        $product->setUpdatedAt();
+            $product->setDescription($productInfoFile['description']);
+            $product->setPrice($productInfoFile['price']);
+            $product->setUpdatedAt();
 
-        $this->entityManager->flush();
+            $this->entityManager->flush();
     }
 
-    public function addNewProduct(Suppliers $supplier, string $description, string $code, float $price): void
+    /**
+     * @param string $fileName
+     * @param Suppliers $supplier
+     * @param array $productInfoFile
+     * @return void
+     */
+    public function addNewProduct(string $fileName, Suppliers $supplier, array $productInfoFile): void
     {
-        $product = new Products();
-        $product->setDescription($description);
-        $product->setCode($code);
-        $product->setPrice($price);
-        $product->setSuppliers($supplier);
-        $product->setCreatedAt();
+            $product = new Products();
+            $product->setDescription($productInfoFile['description']);
+            $product->setCode($productInfoFile['code']);
+            $product->setPrice($productInfoFile['price']);
+            $product->setSuppliers($supplier);
+            $product->setCreatedAt();
 
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
+            $this->entityManager->persist($product);
+            $this->entityManager->flush();
     }
 }

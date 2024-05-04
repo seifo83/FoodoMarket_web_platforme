@@ -8,8 +8,9 @@ interface ProcessFilesImportServiceInterface
 {
     /**
      * @param string $filePath
+     * @param string $fileName
      * @param Suppliers $suppliers
      * @return void
      */
-    public function processFile(string $filePath, Suppliers $suppliers): void;
+    public function processFile(string $filePath, string $fileName, Suppliers $suppliers): void;
 }

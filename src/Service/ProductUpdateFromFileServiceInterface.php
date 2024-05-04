@@ -7,16 +7,14 @@ use App\Entity\Suppliers;
 interface ProductUpdateFromFileServiceInterface
 {
     /**
+     * @param string $fileName
      * @param Suppliers $suppliers
-     * @param string $productDescription
-     * @param string $productCode
-     * @param float $productPrice
+     * @param array $productInfoFile
      * @return void
      */
     public function addOrUpdateProductFromImportFile(
+        string $fileName,
         Suppliers $suppliers,
-        string $productDescription,
-        string $productCode,
-        float $productPrice
+        array $productInfoFile
     ): void;
 }
